@@ -21,6 +21,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'date_of_birth',
+        'gender',
+        'address',
+        'national_id',
+        'role',
+        'is_active',
     ];
 
     /**
@@ -43,6 +50,40 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'date_of_birth' => 'date',
+            'is_active' => 'boolean',
         ];
+    }
+
+    /**
+     * Get all bookings for the user.
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Check if the user is an admin.
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Check if the user is staff.
+     */
+    public function isStaff()
+    {
+        return in_array($this->role, ['admin', 'staff']);
+    }
+
+    /**
+     * Check if the user is active.
+     */
+    public function isActive()
+    {
+        return $this->is_active;
     }
 }
