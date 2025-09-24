@@ -82,12 +82,12 @@
                                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         My Bookings
                                     </a>
-                                    @if(Auth::user()->role === 'admin')
-                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    @if(Auth::check() && Auth::user()->role === 'admin')
+                                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                             Admin Dashboard
                                         </a>
                                     @endif
-                                    <form method="POST" action="#" class="block">
+                                    <form method="POST" action="{{ route('logout') }}" class="block">
                                         @csrf
                                         <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                             Logout
@@ -97,10 +97,10 @@
                             </div>
                         @else
                             <!-- Login/Register Links -->
-                            <a href="#" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium">
+                            <a href="{{ route('login') }}" class="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium">
                                 Login
                             </a>
-                            <a href="#" class="ml-4 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition">
+                            <a href="{{ route('register') }}" class="ml-4 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md text-sm font-medium transition">
                                 Register
                             </a>
                         @endauth
