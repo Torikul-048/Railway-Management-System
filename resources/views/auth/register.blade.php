@@ -14,6 +14,8 @@
                     </svg>
                 </div>
             </div>
+
+            
             <h2 class="text-3xl font-extrabold text-gray-900">Create your account</h2>
             <p class="mt-2 text-sm text-gray-600">
                 Already have an account?

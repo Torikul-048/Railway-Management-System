@@ -74,6 +74,9 @@ class User extends Authenticatable
     /**
      * Check if the user is a customer.
      */
+
+
+    
     public function isCustomer()
     {
         return $this->role === 'customer';
