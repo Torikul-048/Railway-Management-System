@@ -76,7 +76,7 @@
                                      x-transition:leave-end="transform opacity-0 scale-95"
                                      class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50"
                                      style="display: none;">
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                    <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                         My Profile
                                     </a>
                                     <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
@@ -152,14 +152,14 @@
                         </div>
 
                         <div class="mt-3 space-y-1">
-                            <a href="#" class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
+                            <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
                                 My Profile
                             </a>
                             <a href="#" class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
                                 My Bookings
                             </a>
                             @if(Auth::user()->role === 'admin')
-                                <a href="#" class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
+                                <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
                                     Admin Dashboard
                                 </a>
                             @endif
