@@ -8,6 +8,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+
+
+
 // Authentication Routes
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisterController::class, 'create'])->name('register');
