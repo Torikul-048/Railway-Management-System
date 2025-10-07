@@ -54,6 +54,14 @@ class Train extends Model
     }
 
     /**
+     * Get all coaches for this train.
+     */
+    public function coaches()
+    {
+        return $this->hasMany(TrainCoach::class)->orderBy('order');
+    }
+
+    /**
      * Get bookings for a specific date.
      */
     public function bookingsForDate($date)
