@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\TrainController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TrainSearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -33,6 +34,10 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
+
+// Train Search Routes (Public)
+Route::get('/trains/search', [TrainSearchController::class, 'index'])->name('trains.search');
+Route::get('/trains/{train}/details', [TrainSearchController::class, 'show'])->name('trains.details');
 
 // Admin Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {

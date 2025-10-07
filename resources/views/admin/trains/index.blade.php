@@ -56,7 +56,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $train->departure_time->format('H:i') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $train->arrival_time->format('H:i') }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $train->available_seats }}/{{ $train->total_seats }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">₹{{ number_format($train->fare_per_seat, 2) }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">৳{{ number_format($train->fare_per_seat, 2) }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @switch($train->status)
                                     @case('active')

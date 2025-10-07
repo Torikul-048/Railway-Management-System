@@ -42,6 +42,7 @@ class Train extends Model
         'arrival_time' => 'datetime:H:i',
         'fare_per_seat' => 'decimal:2',
         'seat_configuration' => 'array',
+        'facilities' => 'array',
     ];
 
     /**

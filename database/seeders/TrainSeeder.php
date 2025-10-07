@@ -31,7 +31,7 @@ class TrainSeeder extends Seeder
                     'first_class' => 80,
                     'second_class' => 40
                 ],
-                'facilities' => 'AC, Food Service, WiFi',
+                'facilities' => ['AC', 'Food Service', 'WiFi', 'Reading Lights', 'Mobile Charging'],
                 'status' => 'active',
                 'description' => 'Premium express service between Dhaka and Chittagong'
             ],
@@ -51,7 +51,7 @@ class TrainSeeder extends Seeder
                     'first_class' => 50,
                     'second_class' => 100
                 ],
-                'facilities' => 'Basic seating',
+                'facilities' => ['Basic Seating', 'Fan', 'Drinking Water'],
                 'status' => 'active',
                 'description' => 'Regular local service to Sylhet'
             ],
@@ -72,7 +72,7 @@ class TrainSeeder extends Seeder
                     'first_class' => 60,
                     'second_class' => 40
                 ],
-                'facilities' => 'AC, Food Service',
+                'facilities' => ['AC', 'Food Service', 'Reading Lights', 'Mobile Charging'],
                 'status' => 'active',
                 'description' => 'Comfortable intercity service to Rajshahi'
             ],
@@ -93,7 +93,7 @@ class TrainSeeder extends Seeder
                     'first_class' => 60,
                     'second_class' => 60
                 ],
-                'facilities' => 'Sleeper berths, Food service',
+                'facilities' => ['Sleeper Berths', 'Food Service', 'Blankets', 'Reading Lights'],
                 'status' => 'active',
                 'description' => 'Overnight mail service to Khulna'
             ],
@@ -112,7 +112,7 @@ class TrainSeeder extends Seeder
                 'seat_configuration' => [
                     'second_class' => 120
                 ],
-                'facilities' => 'Basic service',
+                'facilities' => ['Basic Seating', 'Fan'],
                 'status' => 'active',
                 'description' => 'Economic passenger service to Mymensingh'
             ],
@@ -132,7 +132,7 @@ class TrainSeeder extends Seeder
                     'ac_chair' => 60,
                     'first_class' => 80
                 ],
-                'facilities' => 'Under maintenance',
+                'facilities' => ['Under Maintenance'],
                 'status' => 'maintenance',
                 'description' => 'Currently under maintenance - will resume service soon'
             ]

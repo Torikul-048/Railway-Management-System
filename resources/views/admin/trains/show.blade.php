@@ -189,7 +189,7 @@
                     <div class="row text-center">
                         <div class="col-12">
                             <div class="bg-info text-white rounded p-3 mb-3">
-                                <div class="fs-4 fw-bold">₹{{ number_format($train->fare_per_seat, 2) }}</div>
+                                <div class="fs-4 fw-bold">৳{{ number_format($train->fare_per_seat, 2) }}</div>
                                 <div>Fare per Seat</div>
                             </div>
                         </div>
