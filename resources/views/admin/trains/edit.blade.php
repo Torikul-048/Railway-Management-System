@@ -191,7 +191,7 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label for="fare_per_seat" class="form-label fw-bold">Fare per Seat (₹) *</label>
+                                <label for="fare_per_seat" class="form-label fw-bold">Fare per Seat (৳) *</label>
                                 <input type="number" 
                                        class="form-control @error('fare_per_seat') is-invalid @enderror" 
                                        id="fare_per_seat" 
@@ -290,7 +290,7 @@
                         <strong>Current Seats:</strong> {{ $train->total_seats }} total, {{ $train->available_seats }} available
                     </div>
                     <div class="mb-3">
-                        <strong>Current Fare:</strong> ₹{{ number_format($train->fare_per_seat, 2) }}
+                        <strong>Current Fare:</strong> ৳{{ number_format($train->fare_per_seat, 2) }}
                     </div>
                 </div>
             </div>

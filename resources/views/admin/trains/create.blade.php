@@ -186,7 +186,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <label for="fare_per_seat" class="form-label fw-bold">Fare per Seat (₹) *</label>
+                                <label for="fare_per_seat" class="form-label fw-bold">Fare per Seat (৳) *</label>
                                 <input type="number" 
                                        class="form-control @error('fare_per_seat') is-invalid @enderror" 
                                        id="fare_per_seat" 
