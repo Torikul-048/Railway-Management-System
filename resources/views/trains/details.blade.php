@@ -157,7 +157,7 @@
             <!-- Sidebar -->
             <div class="space-y-6">
                 <!-- Booking Card -->
-                <div class="bg-white rounded-xl shadow-md p-6 sticky top-6">
+                <div class="bg-white rounded-xl shadow-md p-6 ">
                     <h3 class="text-xl font-bold text-gray-900 mb-4">Book Your Tickets</h3>
                     
                     <div class="space-y-4 mb-6">
@@ -172,10 +172,34 @@
                     </div>
 
                     @if($train->available_seats > 0)
-                        <button class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 mb-3">
-                            Book Now
-                        </button>
-                        <p class="text-xs text-center text-gray-500">Instant booking confirmation</p>
+                        @auth
+                            <form method="GET" action="{{ route('bookings.select-seats', $train) }}" id="booking-form">
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Journey Date</label>
+                                    <input 
+                                        type="date" 
+                                        name="journey_date" 
+                                        min="{{ date('Y-m-d') }}"
+                                        value="{{ request('journey_date', date('Y-m-d')) }}"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                        required
+                                    >
+                                </div>
+                                <button 
+                                    type="submit"
+                                    class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 mb-3">
+                                    Book Now
+                                </button>
+                                <p class="text-xs text-center text-gray-500">Instant booking confirmation</p>
+                            </form>
+                        @else
+                            <a 
+                                href="{{ route('login') }}"
+                                class="w-full block text-center bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 mb-3">
+                                Login to Book
+                            </a>
+                            <p class="text-xs text-center text-gray-500">Please login to continue booking</p>
+                        @endauth
                     @else
                         <button disabled class="w-full bg-gray-300 text-gray-500 font-bold py-4 px-6 rounded-lg cursor-not-allowed mb-3">
                             Sold Out

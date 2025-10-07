@@ -39,6 +39,18 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/trains/search', [TrainSearchController::class, 'index'])->name('trains.search');
 Route::get('/trains/{train}/details', [TrainSearchController::class, 'show'])->name('trains.details');
 
+// Booking Routes (Authenticated)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/trains/{train}/select-seats', [App\Http\Controllers\BookingController::class, 'selectSeats'])->name('bookings.select-seats');
+    Route::post('/bookings/reserve-seats', [App\Http\Controllers\BookingController::class, 'reserveSeats'])->name('bookings.reserve-seats');
+    Route::post('/trains/{train}/booking-form', [App\Http\Controllers\BookingController::class, 'bookingForm'])->name('bookings.booking-form');
+    Route::post('/trains/{train}/book', [App\Http\Controllers\BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/bookings/{booking}/payment', [App\Http\Controllers\BookingController::class, 'payment'])->name('bookings.payment');
+    Route::post('/bookings/{booking}/process-payment', [App\Http\Controllers\BookingController::class, 'processPayment'])->name('bookings.process-payment');
+    Route::get('/bookings/{booking}/confirmation', [App\Http\Controllers\BookingController::class, 'confirmation'])->name('bookings.confirmation');
+    Route::post('/bookings/check-availability', [App\Http\Controllers\BookingController::class, 'checkSeatAvailability'])->name('bookings.check-availability');
+});
+
 // Admin Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
