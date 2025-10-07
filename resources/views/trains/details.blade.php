@@ -157,7 +157,7 @@
             <!-- Sidebar -->
             <div class="space-y-6">
                 <!-- Booking Card -->
-                <div class="bg-white rounded-xl shadow-md p-6 sticky top-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
                     <h3 class="text-xl font-bold text-gray-900 mb-4">Book Your Tickets</h3>
                     
                     <div class="space-y-4 mb-6">
