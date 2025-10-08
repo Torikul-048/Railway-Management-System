@@ -124,6 +124,12 @@
                                                 <i class="fas fa-eye mr-1"></i>
                                                 <span>View Details</span>
                                             </a>
+                                            @if($booking->canBeCancelled())
+                                                <a href="{{ route('bookings.cancel-confirm', $booking) }}" class="text-red-600 hover:text-red-900 transition inline-flex items-center" title="Cancel Booking">
+                                                    <i class="fas fa-times-circle mr-1"></i>
+                                                    <span>Cancel</span>
+                                                </a>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -185,7 +191,7 @@
                             </div>
 
                             <!-- Actions -->
-                            <div class="flex space-x-4 pt-2 border-t border-gray-100">
+                            <div class="flex flex-wrap gap-3 pt-2 border-t border-gray-100">
                                 @if($booking->booking_status === 'confirmed' || $booking->booking_status === 'completed')
                                     <a href="{{ route('bookings.download-ticket', $booking) }}" target="_blank" class="text-blue-600 hover:text-blue-900 text-sm transition">
                                         <i class="fas fa-print mr-1"></i>Print Ticket
@@ -194,6 +200,11 @@
                                 <a href="{{ route('bookings.confirmation', $booking) }}" class="text-green-600 hover:text-green-900 text-sm transition">
                                     <i class="fas fa-eye mr-1"></i>View Details
                                 </a>
+                                @if($booking->canBeCancelled())
+                                    <a href="{{ route('bookings.cancel-confirm', $booking) }}" class="text-red-600 hover:text-red-900 text-sm transition">
+                                        <i class="fas fa-times-circle mr-1"></i>Cancel
+                                    </a>
+                                @endif
                             </div>
                         </div>
                     @endforeach
