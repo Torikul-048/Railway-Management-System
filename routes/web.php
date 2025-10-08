@@ -41,6 +41,8 @@ Route::get('/trains/{train}/details', [TrainSearchController::class, 'show'])->n
 
 // Booking Routes (Authenticated)
 Route::middleware(['auth'])->group(function () {
+    Route::get('/my-bookings', [App\Http\Controllers\BookingController::class, 'myBookings'])->name('bookings.index');
+    Route::get('/bookings/{booking}/download-ticket', [App\Http\Controllers\BookingController::class, 'downloadTicket'])->name('bookings.download-ticket');
     Route::get('/trains/{train}/select-seats', [App\Http\Controllers\BookingController::class, 'selectSeats'])->name('bookings.select-seats');
     Route::post('/bookings/reserve-seats', [App\Http\Controllers\BookingController::class, 'reserveSeats'])->name('bookings.reserve-seats');
     Route::post('/trains/{train}/booking-form', [App\Http\Controllers\BookingController::class, 'bookingForm'])->name('bookings.booking-form');

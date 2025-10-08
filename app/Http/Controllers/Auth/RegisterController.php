@@ -45,8 +45,8 @@ class RegisterController extends Controller
 
         Auth::login($user);
 
-        // Redirect to customer dashboard
-        return redirect()->route('customer.dashboard')->with('success', 'Welcome to Railway Management System!');
+        // Redirect to homepage
+        return redirect('/')->with('success', 'Welcome to Railway Management System!');
     }
 }
 
