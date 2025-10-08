@@ -308,4 +308,43 @@ class BookingController extends Controller
             'unavailable_seats' => array_values($unavailableSeats),
         ]);
     }
+
+    /**
+     * Display user's booking history.
+     */
+    public function myBookings(Request $request)
+    {
+        $status = $request->get('status');
+
+        $query = Auth::user()->bookings()->with('train')->latest();
+
+        if ($status && in_array($status, ['pending', 'confirmed', 'cancelled', 'completed'])) {
+            $query->where('booking_status', $status);
+        }
+
+        $bookings = $query->paginate(10);
+
+        return view('bookings.index', compact('bookings'));
+    }
+
+    /**
+     * Download ticket PDF for a booking.
+     */
+    public function downloadTicket(Booking $booking)
+    {
+        // Ensure the booking belongs to the authenticated user
+        if ($booking->user_id !== Auth::id()) {
+            abort(403, 'Unauthorized access to booking.');
+        }
+
+        // Only allow download for confirmed or completed bookings
+        if (!in_array($booking->booking_status, ['confirmed', 'completed'])) {
+            return back()->with('error', 'Ticket is only available for confirmed or completed bookings.');
+        }
+
+        $booking->load('train');
+
+        // For now, return a printable view that users can save as PDF
+        return view('bookings.ticket-print', compact('booking'));
+    }
 }
