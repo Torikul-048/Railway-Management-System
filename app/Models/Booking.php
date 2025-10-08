@@ -32,6 +32,8 @@ class Booking extends Model
         'special_requests',
         'cancelled_at',
         'cancellation_reason',
+        'refund_amount',
+        'refund_percentage',
     ];
 
     /**
@@ -46,6 +48,8 @@ class Booking extends Model
         'seat_numbers' => 'array',
         'passenger_details' => 'array',
         'total_fare' => 'decimal:2',
+        'refund_amount' => 'decimal:2',
+        'refund_percentage' => 'decimal:2',
     ];
 
     /**
@@ -106,14 +110,106 @@ class Booking extends Model
     }
 
     /**
-     * Cancel the booking.
+     * Calculate refund percentage based on cancellation time.
+     * 
+     * Refund Policy:
+     * - Less than 6 hours from booking: 90% refund
+     * - Less than 12 hours from booking: 75% refund
+     * - Less than 24 hours from booking (1 day): 50% refund
+     * - Less than 48 hours from booking (2 days): 20% refund
+     * - Less than 6 hours before departure: 10% refund
+     * - Train already departed: 0% refund
+     * 
+     * @return float Refund percentage (0-100)
+     */
+    public function calculateRefundPercentage()
+    {
+        $now = now();
+        
+        // Get the train's departure datetime
+        $departureDateTime = $this->journey_date->copy()
+            ->setTimeFromTimeString($this->train->departure_time->format('H:i:s'));
+        
+        // If train has already departed, no refund
+        if ($now->greaterThanOrEqualTo($departureDateTime)) {
+            return 0;
+        }
+        
+        // Check time before departure
+        $hoursBeforeDeparture = $now->diffInHours($departureDateTime, false);
+        
+        // If less than 6 hours before departure, 10% refund
+        if ($hoursBeforeDeparture < 6) {
+            return 10;
+        }
+        
+        // Check time since booking
+        $hoursSinceBooking = $this->booking_date->diffInHours($now);
+        
+        if ($hoursSinceBooking < 6) {
+            return 90;
+        } elseif ($hoursSinceBooking < 12) {
+            return 75;
+        } elseif ($hoursSinceBooking < 24) {
+            return 50;
+        } elseif ($hoursSinceBooking < 48) {
+            return 20;
+        } else {
+            // More than 48 hours since booking, check departure time
+            return 10;
+        }
+    }
+    
+    /**
+     * Calculate the refund amount.
+     * 
+     * @return float Refund amount
+     */
+    public function calculateRefundAmount()
+    {
+        $percentage = $this->calculateRefundPercentage();
+        return ($this->total_fare * $percentage) / 100;
+    }
+    
+    /**
+     * Check if booking can be cancelled.
+     * 
+     * @return bool
+     */
+    public function canBeCancelled()
+    {
+        // Can only cancel confirmed or pending bookings
+        if (!in_array($this->booking_status, ['confirmed', 'pending'])) {
+            return false;
+        }
+        
+        // Can't cancel if train has already departed
+        $departureDateTime = $this->journey_date->copy()
+            ->setTimeFromTimeString($this->train->departure_time->format('H:i:s'));
+        
+        return now()->lessThan($departureDateTime);
+    }
+
+    /**
+     * Cancel the booking with refund calculation.
      */
     public function cancel($reason = null)
     {
+        $refundPercentage = $this->calculateRefundPercentage();
+        $refundAmount = $this->calculateRefundAmount();
+        
         $this->update([
             'booking_status' => 'cancelled',
             'cancelled_at' => now(),
             'cancellation_reason' => $reason,
+            'refund_percentage' => $refundPercentage,
+            'refund_amount' => $refundAmount,
+            'payment_status' => $refundAmount > 0 ? 'refunded' : 'paid',
         ]);
+        
+        return [
+            'refund_percentage' => $refundPercentage,
+            'refund_amount' => $refundAmount,
+        ];
     }
 }

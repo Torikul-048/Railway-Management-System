@@ -347,4 +347,84 @@ class BookingController extends Controller
         // For now, return a printable view that users can save as PDF
         return view('bookings.ticket-print', compact('booking'));
     }
+
+    /**
+     * Cancel a booking with refund calculation.
+     */
+    public function cancel(Request $request, Booking $booking)
+    {
+        // Ensure the booking belongs to the authenticated user or is admin
+        if ($booking->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
+            abort(403, 'Unauthorized access to booking.');
+        }
+
+        // Check if booking can be cancelled
+        if (!$booking->canBeCancelled()) {
+            return back()->with('error', 'This booking cannot be cancelled. The train may have already departed or the booking is already cancelled.');
+        }
+
+        $request->validate([
+            'cancellation_reason' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Calculate refund and cancel the booking
+            $refundInfo = $booking->cancel($request->cancellation_reason);
+
+            // Release the seats back to available pool
+            // Find seats by their seat numbers for this train
+            $seatNumbers = $booking->seat_numbers;
+            
+            // Get the train coaches and find seats by seat number
+            $seats = Seat::whereHas('trainCoach', function ($query) use ($booking) {
+                $query->where('train_id', $booking->train_id);
+            })->whereIn('seat_number', $seatNumbers)->get();
+
+            // Release reservations and make seats available again
+            foreach ($seats as $seat) {
+                $seat->releaseReservation();
+            }
+
+            DB::commit();
+
+            $message = sprintf(
+                'Booking cancelled successfully. Refund: ৳%.2f (%.0f%% of total fare)',
+                $refundInfo['refund_amount'],
+                $refundInfo['refund_percentage']
+            );
+
+            return redirect()->route('bookings.index')->with('success', $message);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Failed to cancel booking. Please try again or contact support.');
+        }
+    }
+
+    /**
+     * Show cancellation confirmation page.
+     */
+    public function cancelConfirm(Booking $booking)
+    {
+        // Ensure the booking belongs to the authenticated user or is admin
+        if ($booking->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
+            abort(403, 'Unauthorized access to booking.');
+        }
+
+        // Check if booking can be cancelled
+        if (!$booking->canBeCancelled()) {
+            return redirect()->route('bookings.index')
+                ->with('error', 'This booking cannot be cancelled.');
+        }
+
+        // Load relationships
+        $booking->load('train');
+
+        // Calculate what the refund would be
+        $refundPercentage = $booking->calculateRefundPercentage();
+        $refundAmount = $booking->calculateRefundAmount();
+
+        return view('bookings.cancel-confirm', compact('booking', 'refundPercentage', 'refundAmount'));
+    }
 }

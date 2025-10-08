@@ -66,6 +66,7 @@ class DatabaseSeeder extends Seeder
         // Call other seeders
         $this->call([
             TrainSeeder::class,
+            TrainCoachSeeder::class,
             BookingSeeder::class,
         ]);
     }

@@ -51,6 +51,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/bookings/{booking}/process-payment', [App\Http\Controllers\BookingController::class, 'processPayment'])->name('bookings.process-payment');
     Route::get('/bookings/{booking}/confirmation', [App\Http\Controllers\BookingController::class, 'confirmation'])->name('bookings.confirmation');
     Route::post('/bookings/check-availability', [App\Http\Controllers\BookingController::class, 'checkSeatAvailability'])->name('bookings.check-availability');
+    
+    // Booking Cancellation Routes
+    Route::get('/bookings/{booking}/cancel', [App\Http\Controllers\BookingController::class, 'cancelConfirm'])->name('bookings.cancel-confirm');
+    Route::post('/bookings/{booking}/cancel', [App\Http\Controllers\BookingController::class, 'cancel'])->name('bookings.cancel');
 });
 
 // Admin Routes
