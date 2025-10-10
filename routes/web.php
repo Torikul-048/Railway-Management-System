@@ -65,6 +65,14 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     
     // Train Management Routes
     Route::resource('trains', TrainController::class);
+    
+    // Admin Booking Management Routes
+    Route::get('/bookings', [App\Http\Controllers\Admin\BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/{booking}', [App\Http\Controllers\Admin\BookingController::class, 'show'])->name('bookings.show');
+    Route::get('/bookings/{booking}/cancel-confirm', [App\Http\Controllers\Admin\BookingController::class, 'cancelConfirm'])->name('bookings.cancel-confirm');
+    Route::post('/bookings/{booking}/cancel', [App\Http\Controllers\Admin\BookingController::class, 'cancel'])->name('bookings.cancel');
+    Route::patch('/bookings/{booking}/status', [App\Http\Controllers\Admin\BookingController::class, 'updateStatus'])->name('bookings.update-status');
+    Route::get('/bookings/export', [App\Http\Controllers\Admin\BookingController::class, 'export'])->name('bookings.export');
 });
 
 // Customer Routes

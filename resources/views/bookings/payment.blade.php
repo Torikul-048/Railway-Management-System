@@ -33,6 +33,26 @@
             </div>
         @endif
 
+        <!-- Payment Timer Warning -->
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <div class="ml-3 flex-1">
+                    <p class="text-sm text-yellow-700">
+                        <strong>Important:</strong> Please complete your payment within 
+                        <span id="countdown-timer" class="font-bold text-red-600"></span>
+                    </p>
+                    <p class="text-xs text-yellow-600 mt-1">
+                        Your booking will be automatically cancelled if payment is not completed within 30 minutes to free up the seats for other passengers.
+                    </p>
+                </div>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Payment Form -->
             <div class="lg:col-span-2">
@@ -254,6 +274,46 @@
             this.closest('label').classList.add('border-blue-500', 'bg-blue-50');
         });
     });
+
+    // Countdown Timer for 30-minute payment deadline
+    const bookingTime = new Date('{{ $booking->booking_date->toIso8601String() }}');
+    const expiryTime = new Date(bookingTime.getTime() + (30 * 60 * 1000)); // 30 minutes from booking
+    
+    function updateCountdown() {
+        const now = new Date();
+        const timeLeft = expiryTime - now;
+        
+        if (timeLeft <= 0) {
+            document.getElementById('countdown-timer').textContent = '00:00';
+            document.getElementById('countdown-timer').classList.remove('text-red-600');
+            document.getElementById('countdown-timer').classList.add('text-gray-500');
+            
+            // Show expiration message
+            alert('Your booking has expired. Redirecting to home page...');
+            window.location.href = '{{ route('home') }}';
+            return;
+        }
+        
+        const minutes = Math.floor(timeLeft / 1000 / 60);
+        const seconds = Math.floor((timeLeft / 1000) % 60);
+        
+        const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        document.getElementById('countdown-timer').textContent = formattedTime;
+        
+        // Change color when less than 5 minutes remaining
+        const timerElement = document.getElementById('countdown-timer');
+        if (minutes < 5) {
+            timerElement.classList.remove('text-red-600');
+            timerElement.classList.add('text-red-700', 'animate-pulse');
+        } else {
+            timerElement.classList.remove('text-red-700', 'animate-pulse');
+            timerElement.classList.add('text-red-600');
+        }
+    }
+    
+    // Update countdown every second
+    updateCountdown();
+    const countdownInterval = setInterval(updateCountdown, 1000);
 </script>
 @endpush
 @endsection
