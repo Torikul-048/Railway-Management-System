@@ -29,9 +29,12 @@
                     </div>
                 </div>
                 <div class="text-right">
-                    <p class="text-blue-100 mb-1">Starting from</p>
-                    <p class="text-4xl font-bold">৳{{ number_format($train->fare_per_seat, 2) }}</p>
-                    <p class="text-sm text-blue-100">per seat</p>
+                    <p class="text-blue-100 mb-1">Fare Starting from</p>
+                    @php
+                        $minPrice = $train->coaches()->min('price_per_seat') ?? $train->fare_per_seat;
+                    @endphp
+                    <p class="text-4xl font-bold">৳{{ number_format($minPrice, 2) }}</p>
+                    <p class="text-sm text-blue-100">Varies by class</p>
                 </div>
             </div>
         </div>
@@ -163,7 +166,18 @@
                     <div class="space-y-4 mb-6">
                         <div class="flex justify-between items-center py-3 border-b border-gray-200">
                             <span class="text-gray-600">Fare per Seat</span>
-                            <span class="text-xl font-bold text-gray-900">৳{{ number_format($train->fare_per_seat, 2) }}</span>
+                            <div class="text-right">
+                                @php
+                                    $minPrice = $train->coaches()->min('price_per_seat') ?? $train->fare_per_seat;
+                                    $maxPrice = $train->coaches()->max('price_per_seat') ?? $train->fare_per_seat;
+                                @endphp
+                                @if($minPrice == $maxPrice)
+                                    <span class="text-xl font-bold text-gray-900">৳{{ number_format($minPrice, 2) }}</span>
+                                @else
+                                    <span class="text-xl font-bold text-gray-900">৳{{ number_format($minPrice, 2) }} - ৳{{ number_format($maxPrice, 2) }}</span>
+                                    <p class="text-xs text-gray-500">Varies by class</p>
+                                @endif
+                            </div>
                         </div>
                         <div class="flex justify-between items-center py-3 border-b border-gray-200">
                             <span class="text-gray-600">Available Seats</span>
@@ -222,7 +236,35 @@
                             <svg class="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            <span class="text-gray-700">Free cancellation up to 24 hours before departure</span>
+                            <div class="text-gray-700">
+                                <div class="font-semibold mb-2">Current Refund Policy:</div>
+                                <ul class="text-sm space-y-1">
+                                    <li class="flex items-center">
+                                        <span class="mr-2">Within 6 hours of booking:</span>
+                                        <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-0.5 rounded">90% refund</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="mr-2">Within 12 hours of booking:</span>
+                                        <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-0.5 rounded">75% refund</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="mr-2">Within 24 hours of booking:</span>
+                                        <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-0.5 rounded">50% refund</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="mr-2">Within 48 hours of booking:</span>
+                                        <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2 py-0.5 rounded">20% refund</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="mr-2">Less than 6 hours before departure:</span>
+                                        <span class="bg-red-100 text-red-800 text-xs font-semibold px-2 py-0.5 rounded">10% refund</span>
+                                    </li>
+                                    <li class="flex items-center">
+                                        <span class="mr-2">After departure:</span>
+                                        <span class="bg-red-100 text-red-800 text-xs font-semibold px-2 py-0.5 rounded">No refund</span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="flex items-start">
                             <svg class="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

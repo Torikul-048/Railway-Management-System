@@ -201,10 +201,27 @@
                                 <span class="text-gray-600">Number of Seats:</span>
                                 <span class="font-semibold text-gray-900">{{ $numberOfSeats }}</span>
                             </div>
-                            <div class="flex justify-between text-sm">
-                                <span class="text-gray-600">Fare per Seat:</span>
-                                <span class="font-semibold text-gray-900">৳{{ number_format($train->fare_per_seat, 2) }}</span>
+                            
+                            <!-- Fare Breakdown by Coach -->
+                            <div class="border-t border-gray-200 pt-3">
+                                <p class="text-xs font-semibold text-gray-700 mb-2">Fare Breakdown:</p>
+                                @php
+                                    $seatsByCoach = $seats->groupBy('train_coach_id');
+                                @endphp
+                                @foreach($seatsByCoach as $coachId => $coachSeats)
+                                    @php
+                                        $coach = $coachSeats->first()->trainCoach;
+                                        $coachSeatCount = $coachSeats->count();
+                                        $coachPrice = $coach->price_per_seat ?? $train->fare_per_seat;
+                                        $coachTotal = $coachPrice * $coachSeatCount;
+                                    @endphp
+                                    <div class="flex justify-between text-xs mb-1">
+                                        <span class="text-gray-600">{{ $coach->coach_name }} ({{ $coachSeatCount }}x):</span>
+                                        <span class="font-semibold text-gray-900">৳{{ number_format($coachTotal, 2) }}</span>
+                                    </div>
+                                @endforeach
                             </div>
+                            
                             <div class="border-t border-gray-200 pt-4">
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-900 font-bold">Total Amount:</span>

@@ -38,7 +38,8 @@
                 </div>
                 <div class="text-right">
                     <p class="text-gray-600 mb-1">Fare per seat</p>
-                    <p class="text-3xl font-bold text-blue-600">৳{{ number_format($train->fare_per_seat, 2) }}</p>
+                    <p class="text-lg font-bold text-blue-600">Varies by class</p>
+                    <p class="text-sm text-gray-500">See individual coach prices below</p>
                 </div>
             </div>
         </div>
@@ -95,6 +96,7 @@
                                     <div>
                                         <h3 class="text-xl font-bold text-gray-900">Coach {{ $coach->coach_number }}</h3>
                                         <p class="text-sm text-gray-600">{{ $coach->coach_name }}</p>
+                                        <p class="text-lg font-semibold text-blue-600 mt-1">৳{{ number_format($coach->price_per_seat ?? $train->fare_per_seat, 2) }} per seat</p>
                                     </div>
                                     <div class="text-right">
                                         <p class="text-sm text-gray-600">Available Seats</p>
@@ -125,6 +127,7 @@
                                                             data-seat-id="{{ $seat->id }}"
                                                             data-seat-number="{{ $seat->seat_number }}"
                                                             data-coach-id="{{ $coach->id }}"
+                                                            data-seat-price="{{ $coach->price_per_seat ?? $train->fare_per_seat }}"
                                                             class="seat-button w-14 h-14 rounded-lg border-2 flex items-center justify-center text-xs font-semibold transition-all duration-200 transform hover:scale-105
                                                                 @if($isBooked)
                                                                     bg-gray-300 border-gray-400 text-gray-500 cursor-not-allowed
@@ -168,15 +171,12 @@
                             <span class="text-gray-600">Selected Seats:</span>
                             <span class="font-semibold text-gray-900" id="selected-count">0</span>
                         </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-600">Fare per Seat:</span>
-                            <span class="font-semibold text-gray-900">৳{{ number_format($train->fare_per_seat, 2) }}</span>
-                        </div>
                         <div class="border-t border-gray-200 pt-4">
                             <div class="flex justify-between">
                                 <span class="text-gray-900 font-bold">Total Fare:</span>
                                 <span class="text-2xl font-bold text-blue-600" id="total-fare">৳0.00</span>
                             </div>
+                            <p class="text-xs text-gray-500 mt-2">Price varies by coach class</p>
                         </div>
                     </div>
 
@@ -213,13 +213,13 @@
 
 @push('scripts')
 <script>
-    const selectedSeats = new Set();
-    const farePerSeat = {{ $train->fare_per_seat }};
+    const selectedSeats = new Map(); // Changed to Map to store seat number and price
 
     // Seat selection handling
     document.querySelectorAll('.seat-button:not([disabled])').forEach(button => {
         button.addEventListener('click', function() {
             const seatNumber = this.dataset.seatNumber;
+            const seatPrice = parseFloat(this.dataset.seatPrice);
             
             if (selectedSeats.has(seatNumber)) {
                 // Deselect
@@ -228,7 +228,7 @@
                 this.classList.add('bg-green-100', 'border-green-500', 'text-green-700');
             } else {
                 // Select
-                selectedSeats.add(seatNumber);
+                selectedSeats.set(seatNumber, seatPrice);
                 this.classList.remove('bg-green-100', 'border-green-500', 'text-green-700');
                 this.classList.add('bg-blue-500', 'border-blue-600', 'text-white');
             }
@@ -239,18 +239,23 @@
 
     function updateSummary() {
         const count = selectedSeats.size;
-        const total = count * farePerSeat;
+        
+        // Calculate total by summing all seat prices
+        let total = 0;
+        selectedSeats.forEach((price, seat) => {
+            total += price;
+        });
         
         // Update count and total
         document.getElementById('selected-count').textContent = count;
-        document.getElementById('total-fare').textContent = '৳' + total.toFixed(2);
+        document.getElementById('total-fare').textContent = '৳' + total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         
         // Update selected seats list
         const listContainer = document.getElementById('selected-seats-list');
         if (count === 0) {
             listContainer.innerHTML = '<span class="text-sm text-gray-500">No seats selected</span>';
         } else {
-            listContainer.innerHTML = Array.from(selectedSeats)
+            listContainer.innerHTML = Array.from(selectedSeats.keys())
                 .map(seat => `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">${seat}</span>`)
                 .join('');
         }
@@ -260,7 +265,7 @@
         container.innerHTML = '';
         
         if (count > 0) {
-            Array.from(selectedSeats).forEach((seat, index) => {
+            Array.from(selectedSeats.keys()).forEach((seat, index) => {
                 const input = document.createElement('input');
                 input.type = 'hidden';
                 input.name = `seat_numbers[${index}]`;

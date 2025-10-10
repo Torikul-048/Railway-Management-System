@@ -39,16 +39,13 @@
 
                         <!-- Desktop Navigation Links -->
                         <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                            <a href="{{ url('/') }}" class="border-primary-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            <a href="{{ url('/') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {{ request()->is('/') ? 'border-primary-500 text-gray-900' : '' }}">
                                 Home
                             </a>
-                            <a href="{{ route('trains.search') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                                Search Trains
-                            </a>
-                            <a href="{{ route('trains.search') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            <a href="{{ route('trains.search') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {{ request()->is('trains*') ? 'border-primary-500 text-gray-900' : '' }}">
                                 Book Tickets
                             </a>
-                            <a href="#" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                            <a href="{{ route('about') }}" class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium {{ request()->is('about') ? 'border-primary-500 text-gray-900' : '' }}">
                                 About
                             </a>
                         </div>
@@ -86,14 +83,14 @@
                                         <i class="fas fa-ticket-alt mr-2"></i>My Bookings
                                     </a>
                                     @if(Auth::check() && Auth::user()->role === 'admin')
-                                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                            Admin Dashboard
+                                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <i class="fas fa-tachometer-alt mr-2"></i>Admin Dashboard
                                         </a>
                                     @endif
                                     <form method="POST" action="{{ route('logout') }}" class="block">
                                         @csrf
-                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                            Logout
+                                        <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
                                         </button>
                                     </form>
                                 </div>
@@ -126,16 +123,13 @@
             <!-- Mobile menu -->
             <div :class="{'block': open, 'hidden': !open}" class="hidden sm:hidden">
                 <div class="pt-2 pb-3 space-y-1">
-                    <a href="{{ url('/') }}" class="bg-primary-50 border-primary-500 text-primary-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                    <a href="{{ url('/') }}" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium {{ request()->is('/') ? 'bg-primary-50 border-primary-500 text-primary-700' : '' }}">
                         Home
                     </a>
-                    <a href="{{ route('trains.search') }}" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-                        Search Trains
-                    </a>
-                    <a href="{{ route('trains.search') }}" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                    <a href="{{ route('trains.search') }}" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium {{ request()->is('trains*') ? 'bg-primary-50 border-primary-500 text-primary-700' : '' }}">
                         Book Tickets
                     </a>
-                    <a href="#" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
+                    <a href="{{ route('about') }}" class="border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium {{ request()->is('about') ? 'bg-primary-50 border-primary-500 text-primary-700' : '' }}">
                         About
                     </a>
                 </div>
@@ -156,20 +150,20 @@
 
                         <div class="mt-3 space-y-1">
                             <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
-                                My Profile
+                                <i class="fas fa-user mr-2"></i>My Profile
                             </a>
-                            <a href="#" class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
-                                My Bookings
+                            <a href="{{ route('bookings.index') }}" class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
+                                <i class="fas fa-ticket-alt mr-2"></i>My Bookings
                             </a>
                             @if(Auth::user()->role === 'admin')
                                 <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
-                                    Admin Dashboard
+                                    <i class="fas fa-tachometer-alt mr-2"></i>Admin Dashboard
                                 </a>
                             @endif
-                            <form method="POST" action="#">
+                            <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="w-full text-left block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
-                                    Logout
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
                                 </button>
                             </form>
                         </div>
@@ -247,10 +241,9 @@
                     <div>
                         <h4 class="text-md font-semibold mb-4">Quick Links</h4>
                         <ul class="space-y-2 text-sm">
-                            <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white">Trains</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white">Book Tickets</a></li>
-                            <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                            <li><a href="{{ url('/') }}" class="text-gray-400 hover:text-white">Home</a></li>
+                            <li><a href="{{ route('trains.search') }}" class="text-gray-400 hover:text-white">Book Tickets</a></li>
+                            <li><a href="{{ route('about') }}" class="text-gray-400 hover:text-white">About Us</a></li>
                         </ul>
                     </div>
                     <div>

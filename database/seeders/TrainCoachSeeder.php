@@ -78,11 +78,27 @@ class TrainCoachSeeder extends Seeder
     {
         $totalRows = ceil($totalSeats / $seatsPerRow);
 
+        // Get base fare from train
+        $train = Train::find($trainId);
+        $baseFare = $train->fare_per_seat ?? 500;
+
+        // Set price multipliers for different coach types
+        $priceMultipliers = [
+            'sleeper' => 1.0,      // Base price
+            'second_class' => 1.3, // 30% more than sleeper
+            'first_class' => 1.8,  // 80% more than sleeper
+            'ac_chair' => 2.0,     // 2x base price
+            'ac_first' => 2.5,     // 2.5x base price
+        ];
+
+        $pricePerSeat = $baseFare * ($priceMultipliers[$coachType] ?? 1.0);
+
         $coach = TrainCoach::create([
             'train_id' => $trainId,
             'coach_number' => $coachNumber,
             'coach_name' => $coachName,
             'coach_type' => $coachType,
+            'price_per_seat' => $pricePerSeat,
             'total_seats' => $totalSeats,
             'seats_per_row' => $seatsPerRow,
             'total_rows' => $totalRows,
