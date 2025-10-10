@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Register - Railway Management System')
+@section('title', 'Reset Password - Railway Management System')
 
 @section('content')
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gray-50">
@@ -8,65 +8,33 @@
         <!-- Header -->
         <div class="text-center mb-8">
             <div class="flex justify-center mb-4">
-                <div class="flex items-center justify-center w-16 h-16 rounded-full bg-primary-600 text-white">
+                <div class="flex items-center justify-center w-16 h-16 rounded-full bg-green-600 text-white">
                     <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                 </div>
             </div>
 
-            
-            <h2 class="text-3xl font-extrabold text-gray-900">Create your account</h2>
+            <h2 class="text-3xl font-extrabold text-gray-900">Set New Password</h2>
             <p class="mt-2 text-sm text-gray-600">
-                Already have an account?
-                <a href="{{ route('login') }}" class="font-medium text-primary-600 hover:text-primary-500">
-                    Sign in here
-                </a>
+                Email verified! Now create a new password for your account.
+            </p>
+            <p class="mt-1 text-sm font-medium text-primary-600">
+                {{ $email }}
             </p>
         </div>
 
-        <!-- Registration Form -->
+        <!-- Reset Password Form -->
         <div class="bg-white py-8 px-6 shadow-xl rounded-2xl border border-gray-100">
-            <form method="POST" action="{{ route('register') }}" class="space-y-6">
+            <form method="POST" action="{{ route('password.update') }}" class="space-y-6">
                 @csrf
+                
+                <input type="hidden" name="email" value="{{ $email }}">
 
-                <!-- Name -->
-                <div>
-                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Full Name
-                    </label>
-                    <input id="name" 
-                           name="name" 
-                           type="text" 
-                           required 
-                           autofocus
-                           value="{{ old('name') }}"
-                           class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('name') border-red-500 @enderror">
-                    @error('name')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Email -->
-                <div>
-                    <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Email Address
-                    </label>
-                    <input id="email" 
-                           name="email" 
-                           type="email" 
-                           required
-                           value="{{ old('email') }}"
-                           class="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent @error('email') border-red-500 @enderror">
-                    @error('email')
-                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Password -->
+                <!-- New Password -->
                 <div>
                     <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Password
+                        New Password
                     </label>
                     <div class="relative">
                         <input id="password" 
@@ -95,7 +63,7 @@
                 <!-- Confirm Password -->
                 <div>
                     <label for="password_confirmation" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Confirm Password
+                        Confirm New Password
                     </label>
                     <div class="relative">
                         <input id="password_confirmation" 
@@ -117,24 +85,6 @@
                     </div>
                 </div>
 
-                <script>
-                    function togglePassword(inputId, eyeIconId, eyeSlashIconId) {
-                        const passwordInput = document.getElementById(inputId);
-                        const eyeIcon = document.getElementById(eyeIconId);
-                        const eyeSlashIcon = document.getElementById(eyeSlashIconId);
-                        
-                        if (passwordInput.type === 'password') {
-                            passwordInput.type = 'text';
-                            eyeIcon.classList.add('hidden');
-                            eyeSlashIcon.classList.remove('hidden');
-                        } else {
-                            passwordInput.type = 'password';
-                            eyeIcon.classList.remove('hidden');
-                            eyeSlashIcon.classList.add('hidden');
-                        }
-                    }
-                </script>
-
                 <!-- Submit Button -->
                 <div>
                     <button type="submit" 
@@ -144,11 +94,43 @@
                                 <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
                             </svg>
                         </span>
-                        Create Account
+                        Reset Password
                     </button>
                 </div>
             </form>
         </div>
+
+        <!-- Security Note -->
+        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="flex">
+                <svg class="h-5 w-5 text-blue-500 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="ml-3">
+                    <p class="text-sm text-blue-700">
+                        <strong>Security Tip:</strong> Choose a strong password with a mix of letters, numbers, and symbols.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+    function togglePassword(inputId, eyeIconId, eyeSlashIconId) {
+        const passwordInput = document.getElementById(inputId);
+        const eyeIcon = document.getElementById(eyeIconId);
+        const eyeSlashIcon = document.getElementById(eyeSlashIconId);
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.classList.add('hidden');
+            eyeSlashIcon.classList.remove('hidden');
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.classList.remove('hidden');
+            eyeSlashIcon.classList.add('hidden');
+        }
+    }
+</script>
 @endsection

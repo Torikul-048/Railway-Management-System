@@ -2,17 +2,23 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\TrainController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrainSearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+    // Redirect admins to dashboard
+    if (Auth::check() && Auth::user()->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
     return view('welcome');
 })->name('home');
 
-
-
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {
@@ -21,6 +27,11 @@ Route::middleware('guest')->group(function () {
     
     Route::get('/login', [LoginController::class, 'create'])->name('login');
     Route::post('/login', [LoginController::class, 'store']);
+    
+    // Password Reset Routes
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'verifyEmail'])->name('password.email');
+    Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
 });
 
 Route::post('/logout', [LoginController::class, 'destroy'])
@@ -28,19 +39,21 @@ Route::post('/logout', [LoginController::class, 'destroy'])
     ->name('logout');
 
 // Profile Routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'redirect.if.admin'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
 
-// Train Search Routes (Public)
-Route::get('/trains/search', [TrainSearchController::class, 'index'])->name('trains.search');
-Route::get('/trains/{train}/details', [TrainSearchController::class, 'show'])->name('trains.details');
+// Train Search Routes (Public - but redirect admins)
+Route::middleware(['redirect.if.admin'])->group(function () {
+    Route::get('/trains/search', [TrainSearchController::class, 'index'])->name('trains.search');
+    Route::get('/trains/{train}/details', [TrainSearchController::class, 'show'])->name('trains.details');
+});
 
-// Booking Routes (Authenticated)
-Route::middleware(['auth'])->group(function () {
+// Booking Routes (Authenticated - customers only)
+Route::middleware(['auth', 'redirect.if.admin'])->group(function () {
     Route::get('/my-bookings', [App\Http\Controllers\BookingController::class, 'myBookings'])->name('bookings.index');
     Route::get('/bookings/{booking}/download-ticket', [App\Http\Controllers\BookingController::class, 'downloadTicket'])->name('bookings.download-ticket');
     Route::get('/trains/{train}/select-seats', [App\Http\Controllers\BookingController::class, 'selectSeats'])->name('bookings.select-seats');
@@ -60,7 +73,17 @@ Route::middleware(['auth'])->group(function () {
 // Admin Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
-        return view('admin.dashboard');
+        $recentBookings = \App\Models\Booking::with(['user', 'train'])
+            ->latest()
+            ->take(5)
+            ->get();
+        
+        $totalTrains = \App\Models\Train::count();
+        $totalBookings = \App\Models\Booking::count();
+        $totalUsers = \App\Models\User::where('role', 'customer')->count();
+        $totalRevenue = \App\Models\Booking::where('booking_status', 'confirmed')->sum('total_fare');
+        
+        return view('admin.dashboard', compact('recentBookings', 'totalTrains', 'totalBookings', 'totalUsers', 'totalRevenue'));
     })->name('dashboard');
     
     // Train Management Routes
@@ -73,6 +96,23 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/bookings/{booking}/cancel', [App\Http\Controllers\Admin\BookingController::class, 'cancel'])->name('bookings.cancel');
     Route::patch('/bookings/{booking}/status', [App\Http\Controllers\Admin\BookingController::class, 'updateStatus'])->name('bookings.update-status');
     Route::get('/bookings/export', [App\Http\Controllers\Admin\BookingController::class, 'export'])->name('bookings.export');
+    
+    // Reports & Analytics Routes
+    Route::get('/reports', [App\Http\Controllers\Admin\ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/booking-stats', [App\Http\Controllers\Admin\ReportController::class, 'bookingStats'])->name('reports.booking-stats');
+    Route::get('/reports/revenue-stats', [App\Http\Controllers\Admin\ReportController::class, 'revenueStats'])->name('reports.revenue-stats');
+    Route::get('/reports/export', [App\Http\Controllers\Admin\ReportController::class, 'export'])->name('reports.export');
+    
+    // User Management Routes
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+    Route::post('/users/{user}/toggle-status', [App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle-status');
+    
+    // Route Management Routes
+    Route::get('/routes', [App\Http\Controllers\Admin\RouteManagementController::class, 'index'])->name('routes.index');
+    
+    // Settings Routes
+    Route::get('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('settings.update');
 });
 
 // Customer Routes

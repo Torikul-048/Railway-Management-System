@@ -102,16 +102,16 @@
                                     </div>
                                 </a>
                                 @if(Auth::check() && Auth::user()->role === 'admin')
-                                    <a href="#" class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-50 border-t border-gray-100">
+                                    <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-primary-700 hover:bg-primary-50 border-t border-gray-100">
                                         <div class="flex items-center">
                                             <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                                             </svg>
                                             Admin Dashboard
                                         </div>
                                     </a>
                                 @endif
-                                <form method="POST" action="#" class="border-t border-gray-100">
+                                <form method="POST" action="{{ route('logout') }}" class="border-t border-gray-100">
                                     @csrf
                                     <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-red-600 hover:bg-red-50">
                                         <div class="flex items-center">
@@ -170,17 +170,17 @@
                             My Profile
                         </a>
                         <a href="#" class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
-                            Settings
+                            <i class="fas fa-cog mr-2"></i>Settings
                         </a>
                         @if(Auth::check() && Auth::user()->role === 'admin')
-                            <a href="#" class="block px-4 py-2 text-base font-medium text-primary-600 hover:text-primary-800 hover:bg-primary-50">
-                                Admin Dashboard
+                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-base font-medium text-primary-600 hover:text-primary-800 hover:bg-primary-50">
+                                <i class="fas fa-tachometer-alt mr-2"></i>Admin Dashboard
                             </a>
                         @endif
-                        <form method="POST" action="#">
+                        <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="w-full text-left block px-4 py-2 text-base font-medium text-red-600 hover:text-red-800 hover:bg-red-50">
-                                Logout
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
                             </button>
                         </form>
                     </div>

@@ -101,14 +101,22 @@ class BookingController extends Controller
         ]);
 
         $journeyDate = $request->journey_date;
-        $seatNumbers = array_values($request->seat_numbers); // Ensure indexed array
+        $seatNumbers = array_values(array_unique($request->seat_numbers)); // Remove duplicates and ensure indexed array
         $numberOfSeats = count($seatNumbers);
-        $totalFare = $train->fare_per_seat * $numberOfSeats;
-
-        // Get seat details
+        
+        // Get seat details with coach information for THIS TRAIN only
         $seats = Seat::whereIn('seat_number', $seatNumbers)
+            ->whereHas('trainCoach', function ($query) use ($train) {
+                $query->where('train_id', $train->id);
+            })
             ->with('trainCoach')
             ->get();
+
+        // Calculate total fare based on coach-specific prices
+        $totalFare = 0;
+        foreach ($seats as $seat) {
+            $totalFare += $seat->trainCoach->price_per_seat ?? $train->fare_per_seat;
+        }
 
         return view('bookings.booking-form', compact('train', 'journeyDate', 'seatNumbers', 'seats', 'numberOfSeats', 'totalFare'));
     }
@@ -155,8 +163,18 @@ class BookingController extends Controller
             // Generate PNR (booking reference)
             $pnr = $this->generatePNR();
 
-            // Calculate total fare
-            $totalFare = $train->fare_per_seat * count($requestedSeats);
+            // Calculate total fare based on coach-specific prices for THIS TRAIN only
+            $seats = Seat::whereIn('seat_number', $requestedSeats)
+                ->whereHas('trainCoach', function ($query) use ($train) {
+                    $query->where('train_id', $train->id);
+                })
+                ->with('trainCoach')
+                ->get();
+            
+            $totalFare = 0;
+            foreach ($seats as $seat) {
+                $totalFare += $seat->trainCoach->price_per_seat ?? $train->fare_per_seat;
+            }
 
             // Create booking
             $booking = Booking::create([

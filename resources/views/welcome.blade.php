@@ -40,7 +40,7 @@
 
             <!-- CTA Buttons -->
             <div class="mt-12 flex flex-col sm:flex-row gap-5 justify-center items-center">
-                <a href="#features" class="group inline-flex items-center justify-center px-10 py-5 text-base font-bold rounded-xl text-primary-700 bg-white hover:bg-primary-50 shadow-2xl hover:shadow-primary-500/50 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
+                <a href="{{ route('trains.search') }}" class="group inline-flex items-center justify-center px-10 py-5 text-base font-bold rounded-xl text-primary-700 bg-white hover:bg-primary-50 shadow-2xl hover:shadow-primary-500/50 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
                     <svg class="w-6 h-6 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
@@ -49,7 +49,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                     </svg>
                 </a>
-                <a href="#" class="group inline-flex items-center justify-center px-10 py-5 border-2 border-white/80 text-base font-bold rounded-xl text-white bg-white/5 backdrop-blur-sm hover:bg-white hover:text-primary-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
+                <a href="{{ route('trains.search') }}" class="group inline-flex items-center justify-center px-10 py-5 border-2 border-white/80 text-base font-bold rounded-xl text-white bg-white/5 backdrop-blur-sm hover:bg-white hover:text-primary-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
                     <svg class="w-6 h-6 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                     </svg>
@@ -218,6 +218,7 @@
     </div>
 
     <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        @guest
         <!-- Icon -->
         <div class="flex justify-center mb-8">
             <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/40">
@@ -252,6 +253,38 @@
                 <span>Sign In</span>
             </a>
         </div>
+        @else
+        <!-- Logged In User Message -->
+        <div class="flex justify-center mb-8">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/40">
+                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Welcome Message -->
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6">
+            Welcome back, {{ Auth::user()->name }}!
+        </h2>
+        
+        <p class="mt-6 text-lg sm:text-xl text-primary-50 max-w-3xl mx-auto leading-relaxed mb-12">
+            Ready to book your next journey? Explore available trains and destinations.
+        </p>
+
+        <!-- Action Button for Logged In Users -->
+        <div class="flex justify-center">
+            <a href="{{ route('trains.search') }}" class="group inline-flex items-center justify-center px-10 py-5 text-base font-bold rounded-xl text-primary-700 bg-white hover:bg-primary-50 shadow-2xl hover:shadow-white/50 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105">
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <span>Search Trains</span>
+                <svg class="ml-3 -mr-1 w-6 h-6 group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+            </a>
+        </div>
+        @endguest
 
         <!-- Trust Badges -->
         <div class="mt-16 flex flex-wrap justify-center items-center gap-8 opacity-80">

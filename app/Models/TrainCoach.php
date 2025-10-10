@@ -19,6 +19,7 @@ class TrainCoach extends Model
         'coach_number',
         'coach_name',
         'coach_type',
+        'price_per_seat',
         'total_seats',
         'seats_per_row',
         'total_rows',
@@ -33,6 +34,7 @@ class TrainCoach extends Model
      * @var array
      */
     protected $casts = [
+        'price_per_seat' => 'decimal:2',
         'layout_config' => 'array',
         'is_active' => 'boolean',
     ];

@@ -2,15 +2,6 @@
 
 @section('title', 'Dashboard')
 
-@section('header-actions')
-    <button class="inline-flex items-center px-4 py-2 bg-primary-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition ease-in-out duration-150">
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-        </svg>
-        Add New
-    </button>
-@endsection
-
 @section('content')
 <!-- Stats Grid -->
 <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
@@ -29,14 +20,7 @@
                     <dl>
                         <dt class="text-sm font-medium text-gray-500 truncate">Total Trains</dt>
                         <dd class="flex items-baseline">
-                            <div class="text-2xl font-semibold text-gray-900">24</div>
-                            <div class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
-                                <svg class="self-center flex-shrink-0 h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                                </svg>
-                                <span class="sr-only">Increased by</span>
-                                12%
-                            </div>
+                            <div class="text-2xl font-semibold text-gray-900">{{ $totalTrains }}</div>
                         </dd>
                     </dl>
                 </div>
@@ -59,14 +43,7 @@
                     <dl>
                         <dt class="text-sm font-medium text-gray-500 truncate">Total Bookings</dt>
                         <dd class="flex items-baseline">
-                            <div class="text-2xl font-semibold text-gray-900">1,247</div>
-                            <div class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
-                                <svg class="self-center flex-shrink-0 h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                                </svg>
-                                <span class="sr-only">Increased by</span>
-                                8%
-                            </div>
+                            <div class="text-2xl font-semibold text-gray-900">{{ number_format($totalBookings) }}</div>
                         </dd>
                     </dl>
                 </div>
@@ -89,14 +66,7 @@
                     <dl>
                         <dt class="text-sm font-medium text-gray-500 truncate">Total Users</dt>
                         <dd class="flex items-baseline">
-                            <div class="text-2xl font-semibold text-gray-900">856</div>
-                            <div class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
-                                <svg class="self-center flex-shrink-0 h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
-                                </svg>
-                                <span class="sr-only">Increased by</span>
-                                15%
-                            </div>
+                            <div class="text-2xl font-semibold text-gray-900">{{ number_format($totalUsers) }}</div>
                         </dd>
                     </dl>
                 </div>
@@ -119,14 +89,7 @@
                     <dl>
                         <dt class="text-sm font-medium text-gray-500 truncate">Revenue</dt>
                         <dd class="flex items-baseline">
-                            <div class="text-2xl font-semibold text-gray-900">৳45.2K</div>
-                            <div class="ml-2 flex items-baseline text-sm font-semibold text-red-600">
-                                <svg class="self-center flex-shrink-0 h-5 w-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                </svg>
-                                <span class="sr-only">Decreased by</span>
-                                3%
-                            </div>
+                            <div class="text-2xl font-semibold text-gray-900">৳{{ number_format($totalRevenue, 2) }}</div>
                         </dd>
                     </dl>
                 </div>
@@ -155,51 +118,43 @@
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
+                @forelse($recentBookings as $booking)
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#BK001</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">John Doe</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Dhaka Express</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Oct 5, 2025</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#BK{{ str_pad($booking->id, 3, '0', STR_PAD_LEFT) }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $booking->user->name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $booking->train->name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $booking->created_at->format('M d, Y') }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Confirmed</span>
+                        @if($booking->booking_status === 'confirmed')
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Confirmed</span>
+                        @elseif($booking->booking_status === 'pending')
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                        @elseif($booking->booking_status === 'cancelled')
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Cancelled</span>
+                        @elseif($booking->booking_status === 'completed')
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Completed</span>
+                        @else
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">{{ ucfirst($booking->booking_status) }}</span>
+                        @endif
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">৳1,500</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">৳{{ number_format($booking->total_fare, 0) }}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="#" class="text-primary-600 hover:text-primary-900">View</a>
+                        <a href="{{ route('admin.bookings.show', $booking->id) }}" class="text-primary-600 hover:text-primary-900">View</a>
                     </td>
                 </tr>
+                @empty
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#BK002</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jane Smith</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Chittagong Mail</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Oct 5, 2025</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">৳2,200</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="#" class="text-primary-600 hover:text-primary-900">View</a>
+                    <td colspan="7" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                        No bookings found
                     </td>
                 </tr>
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#BK003</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Mike Johnson</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Sylhet Express</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Oct 4, 2025</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Confirmed</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">৳1,800</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a href="#" class="text-primary-600 hover:text-primary-900">View</a>
-                    </td>
-                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
     <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
         <div class="flex-1 flex justify-between sm:justify-end">
-            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+            <a href="{{ route('admin.bookings.index') }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                 View All
             </a>
         </div>

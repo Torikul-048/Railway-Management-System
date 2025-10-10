@@ -257,8 +257,11 @@
                                         <div class="flex lg:flex-col items-center lg:items-end justify-between lg:justify-center gap-4">
                                             <div class="text-center lg:text-right">
                                                 <p class="text-sm text-gray-600 mb-1">Starting from</p>
-                                                <p class="text-3xl font-bold text-blue-600">৳{{ number_format($train->fare_per_seat, 2) }}</p>
-                                                <p class="text-xs text-gray-500">per seat</p>
+                                                @php
+                                                    $minPrice = $train->coaches()->min('price_per_seat') ?? $train->fare_per_seat;
+                                                @endphp
+                                                <p class="text-3xl font-bold text-blue-600">৳{{ number_format($minPrice, 2) }}</p>
+                                                <p class="text-xs text-gray-500">Varies by class</p>
                                             </div>
                                             <div class="flex flex-col gap-2">
                                                 <a href="{{ route('trains.details', $train->id) }}" 
@@ -266,9 +269,18 @@
                                                     View Details
                                                 </a>
                                                 @if($train->available_seats > 0)
-                                                    <button class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 whitespace-nowrap">
-                                                        Book Now
-                                                    </button>
+                                                    @auth
+                                                        <form method="GET" action="{{ route('bookings.select-seats', $train) }}">
+                                                            <input type="hidden" name="journey_date" value="{{ request('journey_date', date('Y-m-d')) }}">
+                                                            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 whitespace-nowrap">
+                                                                Book Now
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        <a href="{{ route('login') }}" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 text-center whitespace-nowrap">
+                                                            Login to Book
+                                                        </a>
+                                                    @endauth
                                                 @else
                                                     <button disabled class="bg-gray-300 text-gray-500 font-semibold py-3 px-6 rounded-lg cursor-not-allowed whitespace-nowrap">
                                                         Sold Out
