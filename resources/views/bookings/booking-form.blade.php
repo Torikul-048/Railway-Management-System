@@ -65,72 +65,65 @@
                     <!-- Passengers -->
                     <div class="bg-white rounded-xl shadow-md p-6">
                         <h2 class="text-2xl font-bold text-gray-900 mb-6">Passenger Information</h2>
+                        <p class="text-sm text-gray-600 mb-4">Main passenger information for all {{ $numberOfSeats }} seat(s)</p>
                         
-                        <div id="passengers-container" class="space-y-6">
-                            @foreach($seatNumbers as $index => $seatNumber)
-                                <div class="passenger-form border border-gray-200 rounded-lg p-6">
-                                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
-                                        Passenger {{ $index + 1 }} - Seat {{ $seatNumber }}
-                                    </h3>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                                Full Name <span class="text-red-500">*</span>
-                                            </label>
-                                            <input 
-                                                type="text" 
-                                                name="passengers[{{ $index }}][name]" 
-                                                value="{{ old("passengers.{$index}.name") }}"
-                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error("passengers.{$index}.name") border-red-500 @enderror"
-                                                placeholder="Enter full name"
-                                                required
-                                            >
-                                            @error("passengers.{$index}.name")
-                                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                                Age <span class="text-red-500">*</span>
-                                            </label>
-                                            <input 
-                                                type="number" 
-                                                name="passengers[{{ $index }}][age]" 
-                                                value="{{ old("passengers.{$index}.age") }}"
-                                                min="1" 
-                                                max="120"
-                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error("passengers.{$index}.age") border-red-500 @enderror"
-                                                placeholder="Age"
-                                                required
-                                            >
-                                            @error("passengers.{$index}.age")
-                                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                        
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 mb-2">
-                                                Gender <span class="text-red-500">*</span>
-                                            </label>
-                                            <select 
-                                                name="passengers[{{ $index }}][gender]"
-                                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error("passengers.{$index}.gender") border-red-500 @enderror"
-                                                required
-                                            >
-                                                <option value="">Select Gender</option>
-                                                <option value="male" {{ old("passengers.{$index}.gender") == 'male' ? 'selected' : '' }}>Male</option>
-                                                <option value="female" {{ old("passengers.{$index}.gender") == 'female' ? 'selected' : '' }}>Female</option>
-                                                <option value="other" {{ old("passengers.{$index}.gender") == 'other' ? 'selected' : '' }}>Other</option>
-                                            </select>
-                                            @error("passengers.{$index}.gender")
-                                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                                            @enderror
-                                        </div>
-                                    </div>
+                        <div class="passenger-form border border-gray-200 rounded-lg p-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Full Name <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        name="passenger_name" 
+                                        value="{{ old('passenger_name', Auth::user()->name) }}"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('passenger_name') border-red-500 @enderror"
+                                        placeholder="Enter full name"
+                                        required
+                                    >
+                                    @error('passenger_name')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
                                 </div>
-                            @endforeach
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Age <span class="text-red-500">*</span>
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        name="passenger_age" 
+                                        value="{{ old('passenger_age') }}"
+                                        min="1" 
+                                        max="120"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('passenger_age') border-red-500 @enderror"
+                                        placeholder="Age"
+                                        required
+                                    >
+                                    @error('passenger_age')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                                        Gender <span class="text-red-500">*</span>
+                                    </label>
+                                    <select 
+                                        name="passenger_gender"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent @error('passenger_gender') border-red-500 @enderror"
+                                        required
+                                    >
+                                        <option value="">Select Gender</option>
+                                        <option value="male" {{ old('passenger_gender') == 'male' ? 'selected' : '' }}>Male</option>
+                                        <option value="female" {{ old('passenger_gender') == 'female' ? 'selected' : '' }}>Female</option>
+                                        <option value="other" {{ old('passenger_gender') == 'other' ? 'selected' : '' }}>Other</option>
+                                    </select>
+                                    @error('passenger_gender')
+                                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
                     </div>
 

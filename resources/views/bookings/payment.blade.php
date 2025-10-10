@@ -47,7 +47,7 @@
                         <span id="countdown-timer" class="font-bold text-red-600"></span>
                     </p>
                     <p class="text-xs text-yellow-600 mt-1">
-                        Your booking will be automatically cancelled if payment is not completed within 30 minutes to free up the seats for other passengers.
+                        Your booking will be automatically cancelled if payment is not completed within 5 minutes to free up the seats for other passengers.
                     </p>
                 </div>
             </div>
@@ -277,7 +277,7 @@
 
     // Countdown Timer for 30-minute payment deadline
     const bookingTime = new Date('{{ $booking->booking_date->toIso8601String() }}');
-    const expiryTime = new Date(bookingTime.getTime() + (30 * 60 * 1000)); // 30 minutes from booking
+    const expiryTime = new Date(bookingTime.getTime() + (5 * 60 * 1000)); // 5 minutes from booking
     
     function updateCountdown() {
         const now = new Date();

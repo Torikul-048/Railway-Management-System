@@ -21,7 +21,7 @@ class ExpirePendingBookings extends Command
      *
      * @var string
      */
-    protected $description = 'Automatically cancel pending bookings that have not been paid within 30 minutes';
+    protected $description = 'Automatically cancel pending bookings that have not been paid within 5 minutes';
 
     /**
      * Execute the console command.
@@ -30,10 +30,10 @@ class ExpirePendingBookings extends Command
     {
         $this->info('Checking for expired pending bookings...');
 
-        // Find all pending bookings older than 30 minutes
+        // Find all pending bookings older than 5 minutes
         $expiredBookings = Booking::where('booking_status', 'pending')
             ->where('payment_status', 'pending')
-            ->where('booking_date', '<=', now()->subMinutes(30))
+            ->where('booking_date', '<=', now()->subMinutes(5))
             ->get();
 
         if ($expiredBookings->isEmpty()) {
@@ -51,7 +51,7 @@ class ExpirePendingBookings extends Command
                 $booking->update([
                     'booking_status' => 'cancelled',
                     'cancelled_at' => now(),
-                    'cancellation_reason' => 'Payment not completed within 30 minutes - Automatically cancelled by system',
+                    'cancellation_reason' => 'Payment not completed within 5 minutes - Automatically cancelled by system',
                     'refund_percentage' => 0,
                     'refund_amount' => 0,
                 ]);

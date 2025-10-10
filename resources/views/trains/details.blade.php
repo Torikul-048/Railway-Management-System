@@ -193,8 +193,8 @@
                                     <input 
                                         type="date" 
                                         name="journey_date" 
-                                        min="{{ date('Y-m-d') }}"
-                                        value="{{ request('journey_date', date('Y-m-d')) }}"
+                                        min="{{ now()->timezone('Asia/Dhaka')->format('Y-m-d') }}"
+                                        value="{{ request('journey_date', now()->timezone('Asia/Dhaka')->format('Y-m-d')) }}"
                                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                                         required
                                     >

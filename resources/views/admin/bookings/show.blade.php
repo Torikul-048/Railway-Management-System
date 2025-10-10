@@ -181,30 +181,20 @@
                     <h5 class="mb-0"><i class="fas fa-users"></i> Passenger Details</h5>
                 </div>
                 <div class="card-body">
-                    @if(isset($booking->passenger_details['passengers']))
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Age</th>
-                                        <th>Gender</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($booking->passenger_details['passengers'] as $index => $passenger)
-                                        <tr>
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>{{ $passenger['name'] }}</td>
-                                            <td>{{ $passenger['age'] }}</td>
-                                            <td>{{ ucfirst($passenger['gender']) }}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="text-muted small">Passenger Name</label>
+                            <div class="fw-bold">{{ $booking->passenger_details['name'] ?? 'N/A' }}</div>
                         </div>
-                    @endif
+                        <div class="col-md-4">
+                            <label class="text-muted small">Age</label>
+                            <div class="fw-bold">{{ $booking->passenger_details['age'] ?? 'N/A' }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small">Gender</label>
+                            <div class="fw-bold">{{ ucfirst($booking->passenger_details['gender'] ?? 'N/A') }}</div>
+                        </div>
+                    </div>
 
                     <div class="row mt-3">
                         <div class="col-md-6">

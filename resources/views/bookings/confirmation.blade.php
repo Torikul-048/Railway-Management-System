@@ -11,27 +11,60 @@
             </div>
         @endif
 
-        <!-- Success Message -->
+        <!-- Success/Status Message -->
         <div class="bg-white rounded-xl shadow-md p-8 mb-6 text-center">
-            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-6">
-                <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-            </div>
-            
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Booking Confirmed!
-            </h1>
-            <p class="text-lg text-gray-600 mb-6">
-                Your train ticket has been booked successfully. A confirmation email has been sent to your registered email address.
-            </p>
-            
-            <div class="inline-block">
-                <p class="text-sm text-gray-600 mb-2">Your PNR Number</p>
-                <p class="text-3xl font-mono font-bold text-blue-600 bg-blue-50 px-8 py-4 rounded-lg">
-                    {{ $booking->booking_reference }}
+            @if($booking->booking_status === 'pending')
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-yellow-100 mb-6">
+                    <svg class="w-12 h-12 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Payment Pending
+                </h1>
+                <p class="text-lg text-gray-600 mb-6">
+                    Your seats have been reserved. Please complete the payment within 5 minutes to confirm your booking.
                 </p>
-            </div>
+                
+                <div class="inline-block mb-6">
+                    <p class="text-sm text-gray-600 mb-2">Your PNR Number</p>
+                    <p class="text-3xl font-mono font-bold text-yellow-600 bg-yellow-50 px-8 py-4 rounded-lg">
+                        {{ $booking->booking_reference }}
+                    </p>
+                </div>
+
+                <!-- Payment Button -->
+                <div class="mt-6">
+                    <a href="{{ route('bookings.payment', $booking) }}" 
+                       class="inline-flex items-center px-8 py-3 border border-transparent text-lg font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                        </svg>
+                        Complete Payment Now
+                    </a>
+                </div>
+            @else
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mb-6">
+                    <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </div>
+                
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                    Booking Confirmed!
+                </h1>
+                <p class="text-lg text-gray-600 mb-6">
+                    Your train ticket has been booked successfully. A confirmation email has been sent to your registered email address.
+                </p>
+                
+                <div class="inline-block">
+                    <p class="text-sm text-gray-600 mb-2">Your PNR Number</p>
+                    <p class="text-3xl font-mono font-bold text-blue-600 bg-blue-50 px-8 py-4 rounded-lg">
+                        {{ $booking->booking_reference }}
+                    </p>
+                </div>
+            @endif
         </div>
 
         <!-- Ticket Details -->
@@ -44,10 +77,25 @@
                         <p class="text-blue-100">Train No: {{ $booking->train->train_number }}</p>
                     </div>
                     <div class="text-right">
-                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-green-500 text-white">
-                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                            </svg>
+                        <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium 
+                            @if($booking->booking_status === 'confirmed') bg-green-500 
+                            @elseif($booking->booking_status === 'pending') bg-yellow-500 
+                            @elseif($booking->booking_status === 'cancelled') bg-red-500 
+                            @else bg-gray-500 
+                            @endif text-white">
+                            @if($booking->booking_status === 'confirmed')
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            @elseif($booking->booking_status === 'pending')
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                                </svg>
+                            @elseif($booking->booking_status === 'cancelled')
+                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                </svg>
+                            @endif
                             {{ ucfirst($booking->booking_status) }}
                         </span>
                     </div>
@@ -95,21 +143,12 @@
                         <!-- Passenger Information -->
                         <div>
                             <h3 class="text-lg font-bold text-gray-900 mb-4">Passenger Details</h3>
-                            <div class="space-y-3">
-                                @foreach($booking->passenger_details['passengers'] as $index => $passenger)
-                                    <div class="bg-gray-50 rounded-lg p-4">
-                                        <div class="flex justify-between items-start mb-2">
-                                            <p class="font-semibold text-gray-900">{{ $passenger['name'] }}</p>
-                                            <span class="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded">
-                                                {{ $booking->seat_numbers[$index] ?? 'N/A' }}
-                                            </span>
-                                        </div>
-                                        <div class="flex gap-4 text-sm text-gray-600">
-                                            <span>Age: {{ $passenger['age'] }}</span>
-                                            <span>{{ ucfirst($passenger['gender']) }}</span>
-                                        </div>
-                                    </div>
-                                @endforeach
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <p class="font-semibold text-gray-900 mb-2">{{ $booking->passenger_details['name'] ?? 'N/A' }}</p>
+                                <div class="flex gap-4 text-sm text-gray-600">
+                                    <span>Age: {{ $booking->passenger_details['age'] ?? 'N/A' }}</span>
+                                    <span>{{ ucfirst($booking->passenger_details['gender'] ?? 'N/A') }}</span>
+                                </div>
                             </div>
                         </div>
 
@@ -187,16 +226,30 @@
 
         <!-- Actions -->
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-                href="{{ route('bookings.download-ticket', $booking) }}"
-                target="_blank"
-                class="inline-flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
-                </svg>
-                Print Ticket
-            </a>
+            @if($booking->booking_status === 'confirmed' || $booking->booking_status === 'completed')
+                <a 
+                    href="{{ route('bookings.download-ticket', $booking) }}"
+                    target="_blank"
+                    class="inline-flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                    </svg>
+                    Print Ticket
+                </a>
+            @endif
+            
+            @if($booking->booking_status === 'pending')
+                <a 
+                    href="{{ route('bookings.payment', $booking) }}"
+                    class="inline-flex items-center justify-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
+                >
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                    </svg>
+                    Complete Payment
+                </a>
+            @endif
             
             <a 
                 href="{{ route('home') }}"
@@ -239,7 +292,7 @@
                     <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                     </svg>
-                    <span>Cancellation is allowed up to 24 hours before departure</span>
+                    <span>Cancellation is allowed before departure</span>
                 </li>
                 <li class="flex items-start">
                     <svg class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
