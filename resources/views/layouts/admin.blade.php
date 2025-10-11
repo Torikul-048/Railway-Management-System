@@ -41,6 +41,7 @@
 
             <!-- Sidebar Panel -->
             <div class="relative flex-1 flex flex-col max-w-xs w-full bg-gray-800"
+                 @click.stop
                  x-show="sidebarOpen"
                  x-transition:enter="transition ease-in-out duration-300 transform"
                  x-transition:enter-start="-translate-x-full"

@@ -160,9 +160,9 @@
                                     <i class="fas fa-tachometer-alt mr-2"></i>Admin Dashboard
                                 </a>
                             @endif
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form method="POST" action="{{ route('logout') }}" class="w-full">
                                 @csrf
-                                <button type="submit" class="w-full text-left block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
+                                <button type="submit" class="w-full text-left px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 appearance-none border-0 bg-transparent cursor-pointer">
                                     <i class="fas fa-sign-out-alt mr-2"></i>Logout
                                 </button>
                             </form>
@@ -171,11 +171,11 @@
                 @else
                     <div class="pt-4 pb-3 border-t border-gray-200">
                         <div class="space-y-1">
-                            <a href="#" class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
-                                Login
+                            <a href="{{ route('login') }}" class="block px-4 py-2 text-base font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100">
+                                <i class="fas fa-sign-in-alt mr-2"></i>Login
                             </a>
-                            <a href="#" class="block px-4 py-2 text-base font-medium text-primary-600 hover:text-primary-800 hover:bg-gray-100">
-                                Register
+                            <a href="{{ route('register') }}" class="block px-4 py-2 text-base font-medium text-primary-600 hover:text-primary-800 hover:bg-gray-100">
+                                <i class="fas fa-user-plus mr-2"></i>Register
                             </a>
                         </div>
                     </div>
